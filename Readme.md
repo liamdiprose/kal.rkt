@@ -1,7 +1,9 @@
-# Kal
+# Kal (Racket)
 
-A Racket implementation of my friend's language, Kal. We wanted to see
-the performance difference between Racket and his optimised Rust interpreter.
+A Racket implementation of the Kal language, 
+[Kal](https://github.com/maxeonyx/kal), a project of my friend, @maxeonyx. 
+We wanted to see the performance difference between a quickfire Racket impl and 
+his optimised Rust interpreter.
 
 Benchmarks to come!
 
