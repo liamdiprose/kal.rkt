@@ -66,8 +66,9 @@ handle even_numbers() {
    (log num))
 ```
 
-*Equivalent to example above, **but don't take my word for it:** [`main.rkt:L95-L99`](https://github.com/liamdiprose/kal.rkt/blob/199882dc95beb7da93b3e26262ae291fed820dab/main.rkt#L95-L99)*
-
+<small>
+Equivalent to example above, **but don't take my word for it:** [`main.rkt:L95-L99`](https://github.com/liamdiprose/kal.rkt/blob/199882dc95beb7da93b3e26262ae291fed820dab/main.rkt#L95-L99)
+</small>
 
 **for.kal**
 ```rust
