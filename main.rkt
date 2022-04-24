@@ -1,7 +1,6 @@
 (module kal racket/base
   (require (for-syntax racket/base)
            racket/generator
-           racket/generator
            racket/format
            racket/match)
   
@@ -23,22 +22,23 @@
     (#%module-begin
       (kal-begin expr ...)))
 
-  (define-for-syntax (assert-breaks stmts)
+  (define-for-syntax (begin-until-break-or-continue stmts)
     (cond
       [(null? stmts) '()]
       [(eq? (car (syntax->datum (car stmts))) 'break)
        (syntax-case (car stmts) (with)
          [(break) #''()]
-         [(break with value)
-          #'(value)])]
+         [(break with value) #'(value)])]
+      [(eq? (car (syntax->datum (car stmts))) 'continue)
+       (list (car stmts))]
       [else (cons
               (car stmts)
-              (assert-breaks (cdr stmts)))]))
+              (begin-until-break-or-continue (cdr stmts)))]))
   
   (define-syntax (kal-begin stx)
     (datum->syntax stx 
       (cons 'begin
-        (assert-breaks 
+        (begin-until-break-or-continue
          (cdr (syntax->list stx))))))
   
   (define-syntax-rule (loop body ...)
@@ -72,25 +72,25 @@
       [(continue with values ...)
        #'((current-lp) values ...)]))
   
-  (define current-lp (make-parameter '()))
+  (define current-lp (make-parameter #f))
   
   (define-syntax (handle stx)
     (syntax-case stx ()
       [(_ kal-gen clauses ...)
        #`(let ([gen kal-gen])
           (let lp ([signal (gen)])
-           (current-lp 
-             (lambda continue-args
-               (lp (gen))))
-           (match signal
-             #,@(map
-               (lambda (clause)
-                 (syntax-case clause ()
-                   [((received-signal values ...) rest ...)
-                    #'[(list 'received-signal values ...) 
-                       (kal-begin rest ...)]]))
-               (syntax->list #'(clauses ...)))
-             [else (yield signal)])))]))
+            (current-lp 
+              (lambda continue-args
+                (lp (apply gen continue-args))))
+            (match signal
+              #,@(map
+                (lambda (clause)
+                  (syntax-case clause ()
+                    [((received-signal values ...) rest ...)
+                     #'[(list 'received-signal values ...) 
+                        (kal-begin rest ...)]]))
+                (syntax->list #'(clauses ...)))
+              [else (yield signal)])))]))
   
   (define-syntax-rule (for ([var gen]) body ...)
     (handle gen
