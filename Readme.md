@@ -1,7 +1,8 @@
 # Kal (Racket)
 
-A Racket implementation of the Kal language, 
-[Kal](https://github.com/maxeonyx/kal), a project of my friend, @maxeonyx. 
+A Racket implementation of the [Kal language](https://github.com/maxeonyx/kal), 
+a project by my friend, @maxeonyx.
+
 We wanted to see the performance difference between a quickfire Racket impl and 
 his optimised Rust interpreter.
 
@@ -13,8 +14,9 @@ Benchmarks to come!
 
 ```bash
 $ git clone https://github.com/liamdiprose/kal.rkt.git kal
-$ raco pkg install kal
-$ racket tests/readme.rkt
+$ cd kal
+$ racket
+> (require "main.rkt")
 ```
 
 ## Syntax Comparisons
@@ -62,15 +64,15 @@ handle even_numbers() {
 
 **for.kal.rkt**
 ```scheme
-(for ([x (even_numbers)])
+(for ([num (even_numbers)])
    (log num))
 ```
 
-https://github.com/liamdiprose/kal.rkt/blob/199882dc95beb7da93b3e26262ae291fed820dab/main.rkt#L95-L99
+https://github.com/liamdiprose/kal.rkt/blob/e4fdfe2504e9b5589828cb19096b860a3dc5b041/main.rkt#L95-L99
 
 **for.kal**
 ```rust
-for x in even_numbers() {
+for num in even_numbers() {
     log(num);
 }
 ```
@@ -82,19 +84,19 @@ for x in even_numbers() {
 - [ ] No Garbage collection
 - [ ] Object/List spread operators
 - [x] Implicit cast to big integers on overflow (:free:)
-- [x] Symbols for private fields and langauage-defined behaviour (:free: ?)
+- [x] Symbols for private fields and langauage-defined behaviour (:free:)
 
 ---
 
 - [x] Let bindings (:free:)
 - [x] Functions `fn` (:free:)
-- [ ] Anonymous functions
+- [x] Anonymous functions (only `lambda` at the moment)
 - [x] Addition, multiplication, subtraction, division (:free:)
 - [x] Comparision and boolean operators (:free:)
 - [x] If expressions (:free:)
-- [-] Non-recursive (stack-based), (?)
+- [x] Non-recursive (stack-based)
   - Scheme has tail call optimisation
-  - Chez has efficient implementation of continuations
+  - Chez has an efficient implementation of continuations
 - [x] Booleans (:free:)
 - [x] Integers (:free:)
 - [x] Floats (:free:)
@@ -128,8 +130,8 @@ for x in even_numbers() {
   - [ ] Nested destructuring in `let` and function parameters
   - [ ] `import` pattern
   - [ ] Renaming in object destructuring
-- [-] Proper type-error support (:free:)
-- [-] Proper syntax-error support (:free:)
+- [x] Proper type-error support (:free:)
+- [x] Proper syntax-error support (:free:)
 - [x] Integer division operator (:free:)
 - [x] Remainder operator (:free:)
 - [x] Integer modulo operator (:free:)
@@ -147,7 +149,7 @@ for x in even_numbers() {
 
 - [Typed Racket](https://docs.racket-lang.org/ts-guide/index.html) can optimise code based on type proofs, 
   especially used in Racket's [`math` libraries](https://docs.racket-lang.org/math/index.html).
-- Kal.rkt is syntax agnostic via [BNF notation](lang/ast.rkt)
+- Kal.rkt is syntax agnostic with BNF notation: [lang/ast.rkt](lang/ast.rkt)
 - Port Kal.rkt to Kal.gerbil.scm to get an optimised, standalone binary
   - Racket bundles standalone executables using the `include_str` method @maxeonyx describes
 - Compiling to Javascript can be acheived via [Gerbil](https://cons.io) or it's parent, [Gambit](https://gambitscheme.org/).
